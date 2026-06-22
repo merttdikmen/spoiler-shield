@@ -1,0 +1,95 @@
+/* ============================================================================
+   Spoiler Shield - Twitch hiding rules
+   ----------------------------------------------------------------------------
+   Gated behind <html> classes that content/core.js toggles:
+     .anticip-on        master (site enabled + not peeking)
+     .anticip-thumbs    VOD-card durations & watched bars
+     .anticip-player    VOD seekbar, scrubber & time
+     .anticip-chapters  per-chapter lengths (the "Chapters" button & its rows
+                        stay visible and clickable - only lengths are hidden)
+     .anticip-tw-vod    current page is a VOD (/videos/…) - player rules are
+                        scoped to this so live-stream controls are never touched
+
+   Twitch ships hashed utility class names but keeps stable data-a-target /
+   data-test-selector attributes, so we prefer those. Marker classes added by
+   content/sites/twitch.js: .anticip-dur (card duration), .anticip-dur-fill
+   (purple watched fill), .anticip-chapter-dur (a per-chapter length).
+
+   Player selectors verified (2026) against the maintained
+   ky-is/twitch-vod-unspoiler extension; the hover-preview leak against the
+   jfoster twitchdvr userscript.
+   ============================================================================ */
+
+/* ========================= THUMBNAILS (.anticip-thumbs) ===================== */
+
+/* VOD-card duration pill. .tw-media-card-stat is shared with view counts &
+   ages, so content/sites/twitch.js tags only the timecodes. */
+html.anticip-on.anticip-thumbs .anticip-dur {
+  display: none !important;
+}
+
+/* VOD-card watch-progress / "resume" bar. Twitch shows this ONLY for a
+   logged-in account (it is read from your view history) as a thin bar across the
+   bottom of a partly-watched VOD thumbnail. It is NOT the player seekbar-segment
+   and its accent color is not a fixed value, so we target stable progress-bar
+   SEMANTICS (role / "progress" in the class) scoped to a VOD card - never the
+   player. content/sites/twitch.js also tags these .anticip-dur-fill as a
+   resilient fallback for cards this static scope misses. visibility keeps the
+   thumbnail geometry intact.
+   Re-find: on a channel's Videos tab, a partly-watched VOD shows a thin bar at
+   the bottom of its thumbnail; Inspect it - it lives inside the card's
+   a[data-a-target="preview-card-image-link"]. If a future bar carries neither a
+   progressbar role nor "progress" in its class, add its hook to PROG in
+   content/sites/twitch.js. */
+html.anticip-on.anticip-thumbs a[data-a-target="preview-card-image-link"] [role="progressbar"],
+html.anticip-on.anticip-thumbs a[data-a-target="preview-card-image-link"] [class*="progress" i],
+html.anticip-on.anticip-thumbs article:has(a[href*="/videos/"]) [role="progressbar"],
+html.anticip-on.anticip-thumbs article:has(a[href*="/videos/"]) [class*="progress" i],
+html.anticip-on.anticip-thumbs .anticip-dur-fill {
+  visibility: hidden !important;
+}
+
+/* ========================= PLAYER (.anticip-player + .anticip-tw-vod) ======= */
+
+/* VOD seekbar block (rail + scrubber + both time labels + chapter segment
+   markers). On a VOD it's the first child of the controls bar - exactly what
+   the maintained twitch-vod-unspoiler hides. visibility:hidden keeps the
+   hit-area in layout so click/drag/keyboard seeking still works.
+   Re-find: Inspect the progress bar → walk up to the element whose parent has
+   class .player-controls; it's that parent's first element child. */
+html.anticip-on.anticip-player.anticip-tw-vod .player-controls > *:first-child,
+html.anticip-on.anticip-player.anticip-tw-vod [data-a-target="player-controls"] > *:first-child {
+  visibility: hidden !important;
+}
+
+/* Belt-and-suspenders: the seekbar root, its hit area, and the
+   current-time / total-duration labels, in case the layout above shifts. */
+html.anticip-on.anticip-player.anticip-tw-vod [data-a-target="player-seekbar"],
+html.anticip-on.anticip-player.anticip-tw-vod .seekbar-interaction-area,
+html.anticip-on.anticip-player.anticip-tw-vod [data-test-selector^="seekbar-interaction-area"],
+html.anticip-on.anticip-player.anticip-tw-vod .seekbar-bar,
+html.anticip-on.anticip-player.anticip-tw-vod [data-a-target="player-seekbar-current-time"],
+html.anticip-on.anticip-player.anticip-tw-vod [data-a-target="player-seekbar-duration"] {
+  visibility: hidden !important;
+}
+
+/* Hover seek-preview absolute timestamp. The seekbar hit-area is intentionally
+   kept in layout (for seeking), so hovering it can still spawn this popup with
+   a "1:23:45" caption - a real residual length leak. Hide only the time; the
+   preview thumbnail stays for navigation.
+   Re-find: hover the VOD rail → .player-slider__popup-container holds a
+   .popup-timestamp time node (confirmed in the jfoster twitchdvr userscript). */
+html.anticip-on.anticip-player.anticip-tw-vod .player-slider__popup-container .popup-timestamp,
+html.anticip-on.anticip-player.anticip-tw-vod [data-test-selector="seekbar-time-label"] {
+  visibility: hidden !important;
+}
+
+/* ========================= CHAPTERS (.anticip-chapters) ===================== */
+
+/* Per-chapter length the content script text-tagged inside the "Chapter Select"
+   pop-up (or an inline segment length). Only the length leaf is hidden - the
+   "Chapters" button, the panel, each row's thumbnail and title all stay, so the
+   chapter is still selectable. */
+html.anticip-on.anticip-chapters .anticip-chapter-dur {
+  display: none !important;
+}

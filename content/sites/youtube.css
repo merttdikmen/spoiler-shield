@@ -1,0 +1,133 @@
+/* ============================================================================
+   Spoiler Shield - YouTube hiding rules
+   ----------------------------------------------------------------------------
+   Gated behind <html> classes that content/core.js toggles:
+     .anticip-on        master (site enabled + not peeking)
+     .anticip-thumbs    thumbnail / list durations & watched bars
+     .anticip-player    player progress bar, scrubber & time
+     .anticip-chapters  chapter lengths + in-video timestamps
+   Flipping a class re-applies every rule instantly (no reload) and the rules
+   auto-apply to nodes YouTube renders later.
+
+   display:none for non-interactive text/overlays; visibility:hidden for the
+   seek bar so click- and keyboard-seeking keep working.
+
+   Marker classes added by content/sites/youtube.js (see that file for how each
+   is re-found via Inspect): .anticip-dur (a duration pill/leaf to hide),
+   .anticip-ts (a timestamp <a> link - hide its time, keep it clickable).
+
+   Selectors verified (2026) against uBlock/AdGuard cosmetic filter lists
+   (tadwohlrapp gist, gijsdev/ublock-hide-yt-shorts), watchmarker, and
+   brickbite/hide-youtube-progress.
+   ============================================================================ */
+
+/* ========================= THUMBNAILS (.anticip-thumbs) ===================== */
+
+/* Legacy Polymer duration pill - home, search, channel Videos, playlists,
+   history, sidebar. overlay-style=DEFAULT is a real duration; the :not()s keep
+   LIVE / UPCOMING / SHORTS labels visible.
+   Re-find: Inspect a thumbnail's bottom-right time pill → tag is
+   ytd-thumbnail-overlay-time-status-renderer, attribute overlay-style. */
+html.anticip-on.anticip-thumbs
+  ytd-thumbnail-overlay-time-status-renderer:not([overlay-style="LIVE"]):not([overlay-style="UPCOMING"]):not([overlay-style="SHORTS"]) {
+  display: none !important;
+}
+
+/* Mobile-web (m.youtube.com) legacy pill. NOTE: mobile uses data-style, NOT
+   overlay-style, for the LIVE/UPCOMING/SHORTS exclusion (verified against
+   gijsdev/ublock-hide-yt-shorts). */
+html.anticip-on.anticip-thumbs
+  ytm-thumbnail-overlay-time-status-renderer:not([data-style="LIVE"]):not([data-style="UPCOMING"]):not([data-style="SHORTS"]) {
+  display: none !important;
+}
+
+/* Modern view-model duration pill. .badge-shape-wiz__text / .yt-badge-shape__text
+   are SHARED with LIVE/SHORTS/4K/MEMBERS badges, so content/sites/youtube.js
+   tags only the timecodes with .anticip-dur (landed on the whole pill). */
+html.anticip-on.anticip-thumbs .anticip-dur {
+  display: none !important;
+}
+
+/* "Watched"/resume red progress bar on thumbnails - pure how-far-you-got leak,
+   no text, safe to remove outright (legacy + modern view-model). */
+html.anticip-on.anticip-thumbs ytd-thumbnail-overlay-resume-playback-renderer,
+html.anticip-on.anticip-thumbs ytm-thumbnail-overlay-resume-playback-renderer,
+html.anticip-on.anticip-thumbs yt-thumbnail-overlay-progress-bar-view-model,
+html.anticip-on.anticip-thumbs .ytThumbnailOverlayProgressBarHost,
+html.anticip-on.anticip-thumbs .ytThumbnailOverlayProgressBarHostWatchedProgressBar,
+html.anticip-on.anticip-thumbs .ytThumbnailOverlayProgressBarHostWatchedProgressBarSegment {
+  display: none !important;
+}
+
+/* Related-video durations on the end screen / video wall. */
+html.anticip-on.anticip-thumbs .ytp-ce-video-duration,
+html.anticip-on.anticip-thumbs .ytp-videowall-still-info-duration {
+  display: none !important;
+}
+
+/* ========================= PLAYER (.anticip-player) ========================= */
+
+/* Time readout (0:42 / 12:00). */
+html.anticip-on.anticip-player .ytp-time-display {
+  display: none !important;
+}
+
+/* Progress / scrubber bar + "most replayed" heatmap. The container holds the
+   played/loaded fill, scrubber knob, chapter markers and the autohide line - 
+   all descendants, all covered. MUST be visibility:hidden (not display:none) or
+   click/drag-to-seek breaks; keyboard seeking (←/→, J/K/L) is unaffected. */
+html.anticip-on.anticip-player .ytp-progress-bar-container,
+html.anticip-on.anticip-player .ytp-heat-map-container {
+  visibility: hidden !important;
+}
+
+/* Hover seek tooltip timecode - only the time text; the storyboard thumbnail
+   preview stays for navigation. */
+html.anticip-on.anticip-player .ytp-tooltip-text,
+html.anticip-on.anticip-player .ytp-tooltip-duration {
+  visibility: hidden !important;
+}
+
+/* ========================= CHAPTERS (.anticip-chapters) ===================== */
+
+/* Chapters engagement-panel / carousel timecode. CSS targets the stable #time
+   id; content/sites/youtube.js ALSO tags the leaf timecode as .anticip-chapter-dur
+   so this survives if YouTube renames #time. The chapter title (h4) and the
+   click-to-jump row anchor are untouched. */
+html.anticip-on.anticip-chapters ytd-macro-markers-list-item-renderer #time,
+html.anticip-on.anticip-chapters ytm-macro-markers-list-item-renderer #time,
+html.anticip-on.anticip-chapters .anticip-chapter-dur {
+  display: none !important;
+}
+
+/* Description & comment timestamp links. The time IS the <a>; the chapter/desc
+   title is a sibling text node OUTSIDE it. So we collapse the anchor's own text
+   to zero and drop a clickable ▶ marker in its place - you keep click-to-jump
+   and the title, you just don't see the time. A fixed 12px marker (rem would
+   resolve against <html>, which YouTube leaves at the ~16px default); it
+   inherits the link color so it still reads as an affordance. */
+html.anticip-on.anticip-chapters a.anticip-ts {
+  font-size: 0 !important;
+}
+html.anticip-on.anticip-chapters a.anticip-ts::after {
+  content: "\25B6"; /* ▶ */
+  font-size: 12px !important;
+  margin-right: 2px;
+  vertical-align: baseline;
+}
+
+/* Transcript panel per-line timecodes (Show transcript). Dedicated class, no
+   text-tagging needed. */
+html.anticip-on.anticip-chapters ytd-transcript-segment-renderer .segment-timestamp {
+  visibility: hidden !important;
+}
+
+/* Per-chapter segment dividers + heatmap chapters on the progress bar. These
+   live INSIDE .ytp-progress-bar-container (already hidden when the player gate
+   is on); listed here so they also vanish under the chapters gate alone. Their
+   widths reveal relative chapter lengths. */
+html.anticip-on.anticip-chapters .ytp-chapters-container,
+html.anticip-on.anticip-chapters .ytp-chapter-hover-container,
+html.anticip-on.anticip-chapters .ytp-heat-map-chapter {
+  visibility: hidden !important;
+}

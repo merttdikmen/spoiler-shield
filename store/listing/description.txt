@@ -1,0 +1,21 @@
+Spoiler Shield hides how much time is left in a video or stream, so the clock never spoils the ending. Great for sports, esports, speedruns, awards shows, and reaction videos - anything where "5 minutes left" gives away the result.
+
+Flip it on and the timers disappear instantly, with no page reload. Everything you actually need to watch keeps working.
+
+WHAT IT HIDES
+• Thumbnail durations and the "watched"/resume progress bars across YouTube and Twitch - home, search, channels, playlists, sidebar/up-next, and history.
+• The player's progress and scrubber bar, the time readout (0:42 / 12:00), and YouTube's "most replayed" heatmap.
+• Chapter lengths and chapter markers, transcript timecodes, and the hover seek-preview time.
+• Timestamp links in descriptions and comments - the time is replaced with a clickable ▶, so you can still jump to it without seeing where it lands.
+• On Twitch: the VOD seekbar, scrubber, and duration on /videos pages. Live streams are left untouched.
+
+STILL FULLY USABLE
+Play/pause, volume, quality, captions, and fullscreen work normally. You can still seek with the keyboard (← / → on both sites, J / K / L on YouTube) - you just can't see the position.
+
+YOU'RE IN CONTROL
+• Master on/off switch, plus independent toggles per site (thumbnails, player, chapters).
+• A "Reveal current video" button to peek at the times on the page you're on, until you open something else.
+• Your preferences sync across your devices through your own Chrome profile.
+
+PRIVACY
+No accounts, no tracking, no analytics, no remote code, and nothing leaves your device. Spoiler Shield runs only on youtube.com and twitch.tv, and the only thing it stores is your on/off toggle preferences.

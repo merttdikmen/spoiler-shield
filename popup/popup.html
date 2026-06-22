@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>Spoiler Shield</title>
+  </head>
+  <body>
+    <header>
+      <img src="../icons/icon32.png" alt="" class="logo" width="28" height="28" />
+      <h1>Spoiler Shield</h1>
+    </header>
+
+    <div class="row master">
+      <label class="switch-label" for="enabled">
+        <span class="title">Hide durations</span>
+        <span class="sub">Master switch</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="enabled" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- One card per site; sub-options expand on click. Built by popup.js. -->
+    <div id="sites" class="sites"></div>
+
+    <button id="peek" class="peek" type="button">
+      <span class="peek-icon">👁</span><span class="peek-text">Reveal current video</span>
+    </button>
+    <p class="hint" id="hint">Reveals times on this page until you open a different video.</p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

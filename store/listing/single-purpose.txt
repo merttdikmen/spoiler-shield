@@ -1,0 +1,1 @@
+Hides video durations, timestamps, progress bars, and chapter lengths on YouTube and Twitch so users avoid spoilers about how much of a video or VOD remains.

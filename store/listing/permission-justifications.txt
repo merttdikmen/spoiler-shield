@@ -1,0 +1,5 @@
+storage:
+Persists the user's on/off and per-site (thumbnails / player / chapters) toggle preferences locally and syncs them across the user's own Chrome profile. No browsing data is read or stored.
+
+Host access to youtube.com / twitch.tv:
+Injects the CSS/JS that hides duration, progress-bar, chapter, and timestamp UI on the two sites this extension supports. It runs only on these domains.

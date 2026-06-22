@@ -1,0 +1,1 @@
+Hide YouTube & Twitch video durations, progress bars, thumbnail times & chapter lengths so the clock never spoils the result.
