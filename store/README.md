@@ -4,9 +4,18 @@ Everything needed to (re)build the store graphics and submit the extension. Self
 reproducible: the source images, the real screenshots, the pure-Python tooling, a one-command rebuild
 script, and the step-by-step submission process. No third-party libraries required.
 
-> If you're picking this up after a long break: run `python3 store/tools/build_assets.py`, then upload
-> the files in `store/assets/` plus `store/spoiler-shield-<version>.zip`, using the field map under
-> **Submission** below. Paste-ready listing text (description, summary, single-purpose, permission justifications) is in `store/listing/`; the full review notes are in [`../STORE.md`](../STORE.md).
+> **Picking this up after a long break? To ship a small change and resubmit:**
+> 1. Edit the extension under `content/` (and `popup/` if needed). The root README's **Maintenance**
+>    section explains how to re-find a selector when YouTube/Twitch change their markup.
+> 2. Bump `"version"` in `manifest.json` (the store rejects a re-upload at the same version).
+> 3. Rebuild the package: `bash store/tools/build_zip.sh` -> `store/spoiler-shield-<version>.zip`.
+> 4. Only if you changed the graphics/screenshots: `python3 store/tools/build_assets.py` (regenerates
+>    `store/assets/`). Otherwise the existing `store/assets/` are still good.
+> 5. In the Developer Dashboard upload the new ZIP, keep the same listing text/graphics, and submit.
+>    The **privacy-policy URL never changes** (it is live, see step 8 under **Submission**).
+>
+> Paste-ready listing text (description, summary, single-purpose, permission justifications) is in
+> `store/listing/`; the full review notes are in [`../STORE.md`](../STORE.md).
 
 ---
 
@@ -26,7 +35,7 @@ store/
 │   ├── summary.txt                    ≤132-char short description
 │   ├── single-purpose.txt             single-purpose statement
 │   ├── permission-justifications.txt  storage + host-access blurbs
-│   └── privacy-policy.md              host publicly; paste URL in the Privacy tab
+│   └── privacy-policy.md              the privacy policy (already hosted live, see Submission step 8)
 ├── sources/                       INPUTS (regenerate assets from these)
 │   ├── emblem-baseline-1254.png       AI emblem  -> store icon
 │   ├── promo-master-1536x1024.png     AI banner  -> marquee, small tile, hero
@@ -168,9 +177,10 @@ file from the manifest `version`. Bump `version` in `manifest.json` before each 
 7. **Listing text** - paste from `listing/`: `single-purpose.txt`, `description.txt`, `summary.txt`
    (mirrors the manifest `description`), and `permission-justifications.txt`. Full rationale & review notes:
    [`../STORE.md`](../STORE.md).
-8. **Privacy** - answer "not collected" for every data category, certify Limited Use, and host
-   `listing/privacy-policy.md` (copy of [`../PRIVACY.md`](../PRIVACY.md)) at a public URL (e.g. a GitHub Gist)
-   to paste in the **Privacy policy** field.
+8. **Privacy** - answer "not collected" for every data category, certify Limited Use, and paste the
+   privacy-policy URL in the **Privacy policy** field. It is already hosted publicly (no Gist needed):
+   `https://github.com/merttdikmen/spoiler-shield/blob/main/PRIVACY.md`
+   That page serves [`../PRIVACY.md`](../PRIVACY.md); the same text is mirrored in `listing/privacy-policy.md`.
 
 ### Pre-submit checks
 - Loads unpacked with no console errors on youtube.com and twitch.tv.

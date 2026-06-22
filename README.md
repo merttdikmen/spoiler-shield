@@ -89,6 +89,9 @@ The selectors were verified (2026) against community filter lists (uBlock Origin
 
 Spoiler Shield collects nothing. It stores only your toggle preferences (via `chrome.storage.sync`), makes no network requests, runs no remote code, and reads the page only on `youtube.com` and `twitch.tv` to hide on-screen times. The full policy is in **[PRIVACY.md](PRIVACY.md)**.
 
+The public URL used for the Chrome Web Store privacy-policy field is:
+`https://github.com/merttdikmen/spoiler-shield/blob/main/PRIVACY.md`
+
 ## Publishing to the Chrome Web Store
 
 See **[STORE.md](STORE.md)** for the listing copy, the single-purpose statement, per-permission justifications, and the data-disclosure answers, and **[PRIVACY.md](PRIVACY.md)** for the privacy policy. The listing graphics (icon, tiles, screenshots) plus a one-command rebuild script and the full submission walkthrough live in **[store/](store/README.md)**. In short: the only permission is `storage` (local toggle prefs); host access is two narrow `content_scripts.matches` (`youtube.com`, `twitch.tv`) - no `<all_urls>`, no `host_permissions`, no remote code - which keeps you out of the broad-host in-depth review queue.
